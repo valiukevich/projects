@@ -23,13 +23,13 @@ namespace Demo.Survey.Infrastructure.Migrations
 
                     b.Property<string>("Answer");
 
-                    b.Property<long?>("QuestionId");
+                    b.Property<long?>("SurveyQuestionId");
 
                     b.Property<long?>("UserQuestionAnswerId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("QuestionId");
+                    b.HasIndex("SurveyQuestionId");
 
                     b.HasIndex("UserQuestionAnswerId");
 
@@ -116,9 +116,9 @@ namespace Demo.Survey.Infrastructure.Migrations
 
             modelBuilder.Entity("Demo.Survey.Model.QuestionAnswer", b =>
                 {
-                    b.HasOne("Demo.Survey.Model.SurveyQuestion", "Question")
+                    b.HasOne("Demo.Survey.Model.SurveyQuestion")
                         .WithMany("Answers")
-                        .HasForeignKey("QuestionId");
+                        .HasForeignKey("SurveyQuestionId");
 
                     b.HasOne("Demo.Survey.Model.UserQuestionAnswer")
                         .WithMany("Answers")

@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+﻿// For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Demo.Survey.Api.Controllers
 {
+    using System.Collections.Generic;
+    using System.Linq;
     using Infrastructure;
+    using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Model;
 
@@ -50,71 +47,125 @@ namespace Demo.Survey.Api.Controllers
 
         private void PopulateIfNoData()
         {
-            //dbContext.Database.EnsureDeleted();
-            dbContext.Database.EnsureCreated();
-            //dbContext.Database.Migrate();
+            dbContext.Database.EnsureDeleted();
+            //dbContext.Database.EnsureCreated();
+            dbContext.Database.Migrate();
             var surveys = dbContext.Set<Survey>();
             if (!surveys.Any())
             {
                 var survey = new Survey();
                 survey.Title = "This is a demo!";
                 SurveyQuestion question1 = null;
-                question1 = new SurveyQuestion()
+                question1 = new SurveyQuestion
                 {
                     QuestionType = QuestionType.Select,
                     Text = "How did you find out about this job opportunity?",
-                    Answers = new List<QuestionAnswer>()
+                    Answers = new List<QuestionAnswer>
                     {
-                        new QuestionAnswer() {Question = question1, Answer = "StackOverflow"},
-                        new QuestionAnswer() {Question = question1, Answer = "Indeed"},
-                        new QuestionAnswer() {Question = question1, Answer = "Other"},
+                        new QuestionAnswer
+                        {
+                            Answer = "StackOverflow"
+                        },
+                        new QuestionAnswer
+                        {
+                            Answer = "Indeed"
+                        },
+                        new QuestionAnswer
+                        {
+                            Answer = "Other"
+                        }
                     }
                 };
-                SurveyQuestion question2 = new SurveyQuestion()
+                var question2 = new SurveyQuestion
                 {
                     QuestionType = QuestionType.MultiSelect,
                     Text = "How do you find the company’s location?",
-                    Answers = new List<QuestionAnswer>()
+                    Answers = new List<QuestionAnswer>
                     {
-                        new QuestionAnswer() {Answer = "Easy to access by public transport."},
-                        new QuestionAnswer() {Answer = "Easy to access by car."},
-                        new QuestionAnswer() {Answer = "In a pleasant area."},
-                        new QuestionAnswer() {Answer = "None of the above."},
+                        new QuestionAnswer
+                        {
+                            Answer = "Easy to access by public transport."
+                        },
+                        new QuestionAnswer
+                        {
+                            Answer = "Easy to access by car."
+                        },
+                        new QuestionAnswer
+                        {
+                            Answer = "In a pleasant area."
+                        },
+                        new QuestionAnswer
+                        {
+                            Answer = "None of the above."
+                        }
                     }
                 };
-                SurveyQuestion question3 = new SurveyQuestion()
+                var question3 = new SurveyQuestion
                 {
                     QuestionType = QuestionType.Select,
                     Text = "What was your impression of the office where you had the interview?",
-                    Answers = new List<QuestionAnswer>()
+                    Answers = new List<QuestionAnswer>
                     {
-                        new QuestionAnswer() {Answer = "Tidy."},
-                        new QuestionAnswer() {Answer = "Sloppy."},
-                        new QuestionAnswer() {Answer = "Did not notice."},
+                        new QuestionAnswer
+                        {
+                            Answer = "Tidy."
+                        },
+                        new QuestionAnswer
+                        {
+                            Answer = "Sloppy."
+                        },
+                        new QuestionAnswer
+                        {
+                            Answer = "Did not notice."
+                        }
                     }
                 };
-                SurveyQuestion question4 = new SurveyQuestion()
+                var question4 = new SurveyQuestion
                 {
                     QuestionType = QuestionType.Select,
                     Text = "How technically challenging was the interview?",
-                    Answers = new List<QuestionAnswer>()
+                    Answers = new List<QuestionAnswer>
                     {
-                        new QuestionAnswer() {Answer = "Very difficult."},
-                        new QuestionAnswer() {Answer = "Difficult."},
-                        new QuestionAnswer() {Answer = "Moderate."},
-                        new QuestionAnswer() {Answer = "Easy."},
+                        new QuestionAnswer
+                        {
+                            Answer = "Very difficult."
+                        },
+                        new QuestionAnswer
+                        {
+                            Answer = "Difficult."
+                        },
+                        new QuestionAnswer
+                        {
+                            Answer = "Moderate."
+                        },
+                        new QuestionAnswer
+                        {
+                            Answer = "Easy."
+                        }
                     }
                 };
-                SurveyQuestion question5 = new SurveyQuestion()
+                var question5 = new SurveyQuestion
                 {
                     QuestionType = QuestionType.MultiSelect,
                     Text = "How can you describe the manager that interviewed you?",
-                    Answers = new List<QuestionAnswer>()
+                    Answers = new List<QuestionAnswer>
                     {
-                        new QuestionAnswer() {Answer = "Enthusiastic."},
-                        new QuestionAnswer() {Answer = "Polite."},
-                        new QuestionAnswer() {Answer = "Organized."},
-                        new QuestionAnswer() {Answer = "Could not tell."},
+                        new QuestionAnswer
+                        {
+                            Answer = "Enthusiastic."
+                        },
+                        new QuestionAnswer
+                        {
+                            Answer = "Polite."
+                        },
+                        new QuestionAnswer
+                        {
+                            Answer = "Organized."
+                        },
+                        new QuestionAnswer
+                        {
+                            Answer = "Could not tell."
+                        }
                     }
                 };
                 survey.Questions = new List<SurveyQuestion>
@@ -123,7 +174,7 @@ namespace Demo.Survey.Api.Controllers
                     question2,
                     question3,
                     question4,
-                    question5,
+                    question5
                 };
                 surveys.Add(survey);
                 dbContext.SaveChanges();
@@ -132,13 +183,13 @@ namespace Demo.Survey.Api.Controllers
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody]string value)
+        public void Post([FromBody] string value)
         {
         }
 
         // PUT api/values/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public void Put(int id, [FromBody] string value)
         {
         }
 

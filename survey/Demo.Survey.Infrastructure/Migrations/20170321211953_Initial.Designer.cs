@@ -9,7 +9,7 @@ using Demo.Survey.Model;
 namespace Demo.Survey.Infrastructure.Migrations
 {
     [DbContext(typeof(SurveyContext))]
-    [Migration("20170320215013_Initial")]
+    [Migration("20170321211953_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,13 +24,13 @@ namespace Demo.Survey.Infrastructure.Migrations
 
                     b.Property<string>("Answer");
 
-                    b.Property<long?>("QuestionId");
+                    b.Property<long?>("SurveyQuestionId");
 
                     b.Property<long?>("UserQuestionAnswerId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("QuestionId");
+                    b.HasIndex("SurveyQuestionId");
 
                     b.HasIndex("UserQuestionAnswerId");
 
@@ -117,9 +117,9 @@ namespace Demo.Survey.Infrastructure.Migrations
 
             modelBuilder.Entity("Demo.Survey.Model.QuestionAnswer", b =>
                 {
-                    b.HasOne("Demo.Survey.Model.SurveyQuestion", "Question")
+                    b.HasOne("Demo.Survey.Model.SurveyQuestion")
                         .WithMany("Answers")
-                        .HasForeignKey("QuestionId");
+                        .HasForeignKey("SurveyQuestionId");
 
                     b.HasOne("Demo.Survey.Model.UserQuestionAnswer")
                         .WithMany("Answers")

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26228.4
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{6AADB5F9-4D9F-45BF-99C9-950B0B21A815}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.Survey.Model", "..\Demo.Survey.Model\Demo.Survey.Model.csproj", "{2C826387-6A2E-4F24-9053-13D04B5E70B0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.Survey.Infrastructure", "..\Demo.Survey.Infrastructure\Demo.Survey.Infrastructure.csproj", "{EFCFDDFC-F447-4F5E-A5D0-3FEA0C1692F4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientSide", "..\ClientSide\ClientSide.csproj", "{F9CD523C-83D1-4973-AF42-D1F7D86D0331}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +33,10 @@ Global
 		{EFCFDDFC-F447-4F5E-A5D0-3FEA0C1692F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EFCFDDFC-F447-4F5E-A5D0-3FEA0C1692F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EFCFDDFC-F447-4F5E-A5D0-3FEA0C1692F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9CD523C-83D1-4973-AF42-D1F7D86D0331}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9CD523C-83D1-4973-AF42-D1F7D86D0331}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9CD523C-83D1-4973-AF42-D1F7D86D0331}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9CD523C-83D1-4973-AF42-D1F7D86D0331}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

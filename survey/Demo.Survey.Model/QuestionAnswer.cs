@@ -7,8 +7,6 @@ namespace Demo.Survey.Model
 {
     public class QuestionAnswer : BaseEntity
     {
-        public SurveyQuestion Question { get; set; }
-
         public string Answer { get; set; }
     }
 }

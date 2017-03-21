@@ -114,15 +114,15 @@ namespace Demo.Survey.Infrastructure.Migrations
                     Id = table.Column<long>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Answer = table.Column<string>(nullable: true),
-                    QuestionId = table.Column<long>(nullable: true),
+                    SurveyQuestionId = table.Column<long>(nullable: true),
                     UserQuestionAnswerId = table.Column<long>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_QuestionAnswer", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_QuestionAnswer_SurveyQuestion_QuestionId",
-                        column: x => x.QuestionId,
+                        name: "FK_QuestionAnswer_SurveyQuestion_SurveyQuestionId",
+                        column: x => x.SurveyQuestionId,
                         principalTable: "SurveyQuestion",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -135,9 +135,9 @@ namespace Demo.Survey.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_QuestionAnswer_QuestionId",
+                name: "IX_QuestionAnswer_SurveyQuestionId",
                 table: "QuestionAnswer",
-                column: "QuestionId");
+                column: "SurveyQuestionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_QuestionAnswer_UserQuestionAnswerId",
