@@ -1,0 +1,17 @@
+﻿<div *ngIf="model">
+  <h1>{{survey.title}}</h1>
+
+    <div *ngFor="let question of survey.questions">
+        <h3>{{question.text}}</h3>
+        <!--<b>{{question.questionType}}</b>-->
+        <div *ngFor="let answer of question.answers">
+            <!--<i>{{answer.answer}}</i>-->
+            <input *ngIf="question.questionType===0" type="radio" name="answers[]"
+                   value="{{answer.answer}}">
+            <input *ngIf="question.questionType===1" type="checkbox" name="answers[]"
+                   value="{{answer.answer}}"> {{answer.answer}}
+        </div>
+    </div>
+  <button value="Save" (click)="save()">Save</button>
+</div>
+

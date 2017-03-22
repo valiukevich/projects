@@ -25,6 +25,7 @@
     <Content Include="karma-test-shim.js" />
     <Content Include="karma.conf.js" />
     <Content Include="protractor.config.js" />
+    <Content Include="src\app\app.component.html" />
     <Content Include="src\favicon.ico" />
     <Content Include="src\index.html" />
     <Content Include="src\styles.css" />

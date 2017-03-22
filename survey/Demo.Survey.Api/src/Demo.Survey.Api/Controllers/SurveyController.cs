@@ -20,171 +20,188 @@ namespace Demo.Survey.Api.Controllers
         }
 
         [HttpGet]
-        public List<Survey> Get()
+        public List<UserSurvey> Get()
         {
             PopulateIfNoData();
-            var surveys = dbContext.Set<Survey>()
-                .Include(x => x.Questions)
+            var surveys = dbContext.Set<UserSurvey>()
+                .Include(x => x.User)
+                .Include(x => x.Answers)
+                .Include(x => x.Survey)
+                .ThenInclude(x => x.Questions)
                 .ThenInclude(x => x.Answers)
                 .ToList();
             return surveys;
         }
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public Survey Get(int id)
-        {
-            PopulateIfNoData();
-            return dbContext.Set<UserSurvey>()
-                       .Include(x => x.Survey)
-                       .ThenInclude(x => x.Questions)
-                       .ThenInclude(x => x.Answers).FirstOrDefault(x => x.Id == id)?.Survey
-                   ??
-                   dbContext.Set<Survey>()
-                       .Include(x => x.Questions)
-                       .ThenInclude(x => x.Answers).FirstOrDefault();
-        }
+        //// GET api/values/5
+        //[HttpGet("{id}")]
+        //public UserSurvey Get(int id)
+        //{
+        //    PopulateIfNoData();
+        //    return dbContext.Set<UserSurvey>()
+        //        .Include(x => x.User)
+        //        .Include(x => x.Answers)
+        //        .Include(x => x.Survey)
+        //        .ThenInclude(x => x.Questions)
+        //        .ThenInclude(x => x.Answers).FirstOrDefault(x => x.Id == id);
+        //}
+
+        #region Demo data
 
         private void PopulateIfNoData()
         {
             dbContext.Database.EnsureDeleted();
-            //dbContext.Database.EnsureCreated();
-            dbContext.Database.Migrate();
-            var surveys = dbContext.Set<Survey>();
+            dbContext.Database.EnsureCreated();
+            //dbContext.Database.Migrate();
+            var surveys = dbContext.Set<UserSurvey>();
             if (!surveys.Any())
             {
-                var survey = new Survey();
-                survey.Title = "This is a demo!";
-                SurveyQuestion question1 = null;
-                question1 = new SurveyQuestion
+                var survey = CreateSurvey();
+                var userSurvey = new UserSurvey()
                 {
-                    QuestionType = QuestionType.Select,
-                    Text = "How did you find out about this job opportunity?",
-                    Answers = new List<QuestionAnswer>
-                    {
-                        new QuestionAnswer
-                        {
-                            Answer = "StackOverflow"
-                        },
-                        new QuestionAnswer
-                        {
-                            Answer = "Indeed"
-                        },
-                        new QuestionAnswer
-                        {
-                            Answer = "Other"
-                        }
-                    }
+                    User = new User() { Name = "Demo"},
+                    Survey = survey,
                 };
-                var question2 = new SurveyQuestion
-                {
-                    QuestionType = QuestionType.MultiSelect,
-                    Text = "How do you find the company’s location?",
-                    Answers = new List<QuestionAnswer>
-                    {
-                        new QuestionAnswer
-                        {
-                            Answer = "Easy to access by public transport."
-                        },
-                        new QuestionAnswer
-                        {
-                            Answer = "Easy to access by car."
-                        },
-                        new QuestionAnswer
-                        {
-                            Answer = "In a pleasant area."
-                        },
-                        new QuestionAnswer
-                        {
-                            Answer = "None of the above."
-                        }
-                    }
-                };
-                var question3 = new SurveyQuestion
-                {
-                    QuestionType = QuestionType.Select,
-                    Text = "What was your impression of the office where you had the interview?",
-                    Answers = new List<QuestionAnswer>
-                    {
-                        new QuestionAnswer
-                        {
-                            Answer = "Tidy."
-                        },
-                        new QuestionAnswer
-                        {
-                            Answer = "Sloppy."
-                        },
-                        new QuestionAnswer
-                        {
-                            Answer = "Did not notice."
-                        }
-                    }
-                };
-                var question4 = new SurveyQuestion
-                {
-                    QuestionType = QuestionType.Select,
-                    Text = "How technically challenging was the interview?",
-                    Answers = new List<QuestionAnswer>
-                    {
-                        new QuestionAnswer
-                        {
-                            Answer = "Very difficult."
-                        },
-                        new QuestionAnswer
-                        {
-                            Answer = "Difficult."
-                        },
-                        new QuestionAnswer
-                        {
-                            Answer = "Moderate."
-                        },
-                        new QuestionAnswer
-                        {
-                            Answer = "Easy."
-                        }
-                    }
-                };
-                var question5 = new SurveyQuestion
-                {
-                    QuestionType = QuestionType.MultiSelect,
-                    Text = "How can you describe the manager that interviewed you?",
-                    Answers = new List<QuestionAnswer>
-                    {
-                        new QuestionAnswer
-                        {
-                            Answer = "Enthusiastic."
-                        },
-                        new QuestionAnswer
-                        {
-                            Answer = "Polite."
-                        },
-                        new QuestionAnswer
-                        {
-                            Answer = "Organized."
-                        },
-                        new QuestionAnswer
-                        {
-                            Answer = "Could not tell."
-                        }
-                    }
-                };
-                survey.Questions = new List<SurveyQuestion>
-                {
-                    question1,
-                    question2,
-                    question3,
-                    question4,
-                    question5
-                };
-                surveys.Add(survey);
+                surveys.Add(userSurvey);
                 dbContext.SaveChanges();
             }
         }
 
+        private static Survey CreateSurvey()
+        {
+            var survey = new Survey();
+            survey.Title = "This is a demo!";
+            SurveyQuestion question1 = null;
+            question1 = new SurveyQuestion
+            {
+                QuestionType = QuestionType.Select,
+                Text = "How did you find out about this job opportunity?",
+                Answers = new List<QuestionAnswer>
+                {
+                    new QuestionAnswer
+                    {
+                        Answer = "StackOverflow"
+                    },
+                    new QuestionAnswer
+                    {
+                        Answer = "Indeed"
+                    },
+                    new QuestionAnswer
+                    {
+                        Answer = "Other"
+                    }
+                }
+            };
+            var question2 = new SurveyQuestion
+            {
+                QuestionType = QuestionType.MultiSelect,
+                Text = "How do you find the company’s location?",
+                Answers = new List<QuestionAnswer>
+                {
+                    new QuestionAnswer
+                    {
+                        Answer = "Easy to access by public transport."
+                    },
+                    new QuestionAnswer
+                    {
+                        Answer = "Easy to access by car."
+                    },
+                    new QuestionAnswer
+                    {
+                        Answer = "In a pleasant area."
+                    },
+                    new QuestionAnswer
+                    {
+                        Answer = "None of the above."
+                    }
+                }
+            };
+            var question3 = new SurveyQuestion
+            {
+                QuestionType = QuestionType.Select,
+                Text = "What was your impression of the office where you had the interview?",
+                Answers = new List<QuestionAnswer>
+                {
+                    new QuestionAnswer
+                    {
+                        Answer = "Tidy."
+                    },
+                    new QuestionAnswer
+                    {
+                        Answer = "Sloppy."
+                    },
+                    new QuestionAnswer
+                    {
+                        Answer = "Did not notice."
+                    }
+                }
+            };
+            var question4 = new SurveyQuestion
+            {
+                QuestionType = QuestionType.Select,
+                Text = "How technically challenging was the interview?",
+                Answers = new List<QuestionAnswer>
+                {
+                    new QuestionAnswer
+                    {
+                        Answer = "Very difficult."
+                    },
+                    new QuestionAnswer
+                    {
+                        Answer = "Difficult."
+                    },
+                    new QuestionAnswer
+                    {
+                        Answer = "Moderate."
+                    },
+                    new QuestionAnswer
+                    {
+                        Answer = "Easy."
+                    }
+                }
+            };
+            var question5 = new SurveyQuestion
+            {
+                QuestionType = QuestionType.MultiSelect,
+                Text = "How can you describe the manager that interviewed you?",
+                Answers = new List<QuestionAnswer>
+                {
+                    new QuestionAnswer
+                    {
+                        Answer = "Enthusiastic."
+                    },
+                    new QuestionAnswer
+                    {
+                        Answer = "Polite."
+                    },
+                    new QuestionAnswer
+                    {
+                        Answer = "Organized."
+                    },
+                    new QuestionAnswer
+                    {
+                        Answer = "Could not tell."
+                    }
+                }
+            };
+            survey.Questions = new List<SurveyQuestion>
+            {
+                question1,
+                question2,
+                question3,
+                question4,
+                question5
+            };
+            return survey;
+        }
+            #endregion
+
         // POST api/values
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post([FromBody] UserSurvey value)
         {
+            dbContext.Set<UserSurvey>().Attach(value);
+            dbContext.SaveChanges();
         }
 
         // PUT api/values/5
