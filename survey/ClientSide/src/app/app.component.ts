@@ -9,6 +9,7 @@ import 'rxjs/Rx';
 export class AppComponent {
     model: any;
     survey: any;
+    saved: boolean = false;
 
     constructor(private http: Http) {
         
@@ -34,8 +35,13 @@ export class AppComponent {
         let options = new RequestOptions({ headers: headers });
         this.http.post('http://localhost:51193/api/survey', JSON.stringify(this.model), options).catch(this.handleError).subscribe(x => {
             console.log(x);
+            this.saved = true;
             this.load();
         });
+    }
+
+    edit() {
+        this.saved = false;
     }
 
     selectAnswer(question: any, answer: any) {
@@ -56,14 +62,12 @@ export class AppComponent {
             userAnswer.answers = [{ answer: answer }];
         }
         else if (question.questionType === 1) { //check boxes
-            //answer.answers = [{ answer: answer }];
             let item = userAnswer.answers.find((x: any) => x.answer == answer);
             if (item) {
                 var index = userAnswer.answers.indexOf(item, 0);
                 if (index > -1) {
                     userAnswer.answers.splice(index, 1);
                 }
-                //delete userAnswer.answers[item];
             } else {
                 userAnswer.answers.push({ answer: answer });
             }

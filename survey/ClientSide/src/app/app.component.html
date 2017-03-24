@@ -1,19 +1,25 @@
-﻿<div *ngIf="model">
-  <h1>{{survey.title}}</h1>
-    <button value="Save" (click)="save()">Save</button>
+﻿<div *ngIf="model"  class="container">
+    <h1 [hidden]="saved">Please, fill the form '{{survey.title}}'</h1>
+    <h1 [hidden]="!saved">Please, review results of the form '{{survey.title}}'</h1>
+    <button value="Save" (click)="save()" class="btn btn-success" [hidden]="saved">Save</button>
+    <button value="Edit" (click)="edit()" class="btn btn-primary" [hidden]="!saved">Edit</button>
     
-
-    <div *ngFor="let question of survey.questions">
+      
+      <div *ngFor="let question of survey.questions" [hidden]="saved">
         <h3>{{question.text}}</h3>
-        <!--<b>{{question.questionType}}</b>-->
         <div *ngFor="let answer of question.answers">
-            <!--<i>{{answer.answer}}</i>-->
-            <input *ngIf="question.questionType===0" type="radio" name="{{question.text}}"
-                   value="{{answer.answer}}" (click)="selectAnswer(question, answer.answer)" [checked] ="selected(question, answer.answer)">
-            <input *ngIf="question.questionType===1" type="checkbox" name="answers[]"
-                   value="{{answer.answer}}" (click)="selectAnswer(question, answer.answer)" [checked] ="selected(question, answer.answer)"> {{answer.answer}}
+          <input *ngIf="question.questionType===0" type="radio" name="{{question.text}}"
+                 value="{{answer.answer}}" (click)="selectAnswer(question, answer.answer)" [checked]="selected(question, answer.answer)">
+          <input *ngIf="question.questionType===1" type="checkbox" name="answers[]"
+                 value="{{answer.answer}}" (click)="selectAnswer(question, answer.answer)" [checked]="selected(question, answer.answer)"> {{answer.answer}}
         </div>
-    </div>
-  <button value="Save" (click)="save()">Save</button>
+      </div>
+      <div *ngFor="let answer of model.answers" [hidden]="!saved">
+        <h3>{{answer.question.text}}</h3>
+        <ul *ngFor="let answer of answer.answers">
+            <li>{{answer.answer}}</li>
+        </ul>
+      </div>
+  <!--<button value="Save" (click)="save()" class="btn btn-success">Save</button>-->
 </div>
 
