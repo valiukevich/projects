@@ -1,20 +1,17 @@
-﻿// For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-
-namespace Demo.Survey.Api.Controllers
+﻿namespace Demo.Survey.Api.Controllers
 {
+    using System;
     using System.Collections.Generic;
-    using System.Linq;
     using Infrastructure;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
-    using Microsoft.EntityFrameworkCore;
     using Model;
 
     [Route("api/[controller]")]
     public class SurveyController : Controller
     {
         private readonly SurveyContext dbContext;
-        private static UserSurvey cache;
+        private static Lazy<UserSurvey> lazy = new Lazy<UserSurvey>(CreateUserSurvey);
+        private static UserSurvey cache = lazy.Value;
 
         // GET: api/values
         public SurveyController(SurveyContext dbContext)
@@ -25,58 +22,34 @@ namespace Demo.Survey.Api.Controllers
         [HttpGet]
         public List<UserSurvey> Get()
         {
-            PopulateIfNoData();
-            //var surveys = dbContext.Set<UserSurvey>()
-            //    .Include(x => x.User)
-            //    .Include(x => x.Answers)
-            //    .Include(x => x.Survey)
-            //    .ThenInclude(x => x.Questions)
-            //    .ThenInclude(x => x.Answers)
-            //    .ToList();
-            //return surveys;
-            return new List<UserSurvey>() {cache};
+            return new List<UserSurvey>()
+            {
+                cache
+            };
         }
 
-        //// GET api/values/5
-        //[HttpGet("{id}")]
-        //public UserSurvey Get(int id)
-        //{
-        //    PopulateIfNoData();
-        //    return dbContext.Set<UserSurvey>()
-        //        .Include(x => x.User)
-        //        .Include(x => x.Answers)
-        //        .Include(x => x.Survey)
-        //        .ThenInclude(x => x.Questions)
-        //        .ThenInclude(x => x.Answers).FirstOrDefault(x => x.Id == id);
-        //}
+        // POST api/values
+        [HttpPost]
+        public void Post([FromBody] UserSurvey userSurvey)
+        {
+            cache = userSurvey;
+        }
 
         #region Demo data
 
-        private void PopulateIfNoData()
+        private static UserSurvey CreateUserSurvey()
         {
-            //dbContext.Database.EnsureDeleted();
-            //dbContext.Database.EnsureCreated();
-            //dbContext.Database.Migrate();
-            if (cache != null)
-            {
-                return;
-            }
-
             var survey = CreateSurvey();
             var userSurvey = new UserSurvey()
             {
-                User = new User() { Name = "Demo" },
+                User = new User()
+                {
+                    Name = "Demo"
+                },
                 Survey = survey,
                 Answers = new List<UserQuestionAnswer>()
             };
-
-            cache = userSurvey;
-
-            var surveys = dbContext.Set<UserSurvey>();
-            if (!surveys.Any())
-            {   surveys.Add(userSurvey);
-                dbContext.SaveChanges();
-            }
+            return userSurvey;
         }
 
         private static Survey CreateSurvey()
@@ -206,57 +179,7 @@ namespace Demo.Survey.Api.Controllers
             };
             return survey;
         }
-            #endregion
-
-        // POST api/values
-        [HttpPost]
-        public void Post([FromBody] UserSurvey userSurvey)
-        {
-            //userSurvey.Answers.ForEach(a =>
-            //{
-            //    x.Question = dbContext.Set<SurveyQuestion>().Find(a.Question.Id)
-            //                    .Include(x => x.Answers)
-            //                    .ThenInclude(x => x.Questions);
-            //});
-            //userSurvey.Survey = dbContext.Set<Survey>().Find(userSurvey.Survey.Id);
-            //userSurvey.User = dbContext.Set<User>().Find(userSurvey.User.Id);
-            //dbContext.Set<UserSurvey>().Attach(userSurvey);
-            //userSurvey.Answers.ForEach(x =>
-            //{
-            //    dbContext.Set<UserQuestionAnswer>()
-            //    .Include(x => x.Answers)
-            //    .ThenInclude(x => x.Questions)
-                
-            //});
-
-            //var us = dbContext.UserSurveys.Find(userSurvey.Id);
-            //userSurvey.Answers.ForEach(x =>
-            //{
-            //    var item = dbContext.Set<UserQuestionAnswer>().FirstOrDefault(a => a.Question.Id == x.Question.Id);
-            //    if (item == null)
-            //    {
-            //        var answ = new UserQuestionAnswer()
-            //        {
-            //            Question = dbContext.Set<SurveyQuestion>().Find(x.Question.Id),
-            //            Answers = x.Answers
-            //        };
-            //        dbContext.Set<UserQuestionAnswer>().Add(answ);
-            //    }
-            //    else
-            //    {
-
-            //        item.Answers.Clear();
-            //        x.Answers.ForEach(item.Answers.Add);
-            //    }
-            //});
-            //dbContext.SaveChanges();
-            cache = userSurvey;
-        }
-        
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+            
+        #endregion
     }
 }
