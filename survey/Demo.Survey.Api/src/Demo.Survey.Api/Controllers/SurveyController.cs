@@ -6,6 +6,7 @@ namespace Demo.Survey.Api.Controllers
     using System.Linq;
     using Infrastructure;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
     using Microsoft.EntityFrameworkCore;
     using Model;
 
@@ -13,6 +14,8 @@ namespace Demo.Survey.Api.Controllers
     public class SurveyController : Controller
     {
         private readonly SurveyContext dbContext;
+        private static UserSurvey cache;
+
         // GET: api/values
         public SurveyController(SurveyContext dbContext)
         {
@@ -23,14 +26,15 @@ namespace Demo.Survey.Api.Controllers
         public List<UserSurvey> Get()
         {
             PopulateIfNoData();
-            var surveys = dbContext.Set<UserSurvey>()
-                .Include(x => x.User)
-                .Include(x => x.Answers)
-                .Include(x => x.Survey)
-                .ThenInclude(x => x.Questions)
-                .ThenInclude(x => x.Answers)
-                .ToList();
-            return surveys;
+            //var surveys = dbContext.Set<UserSurvey>()
+            //    .Include(x => x.User)
+            //    .Include(x => x.Answers)
+            //    .Include(x => x.Survey)
+            //    .ThenInclude(x => x.Questions)
+            //    .ThenInclude(x => x.Answers)
+            //    .ToList();
+            //return surveys;
+            return new List<UserSurvey>() {cache};
         }
 
         //// GET api/values/5
@@ -50,19 +54,27 @@ namespace Demo.Survey.Api.Controllers
 
         private void PopulateIfNoData()
         {
-            dbContext.Database.EnsureDeleted();
-            dbContext.Database.EnsureCreated();
+            //dbContext.Database.EnsureDeleted();
+            //dbContext.Database.EnsureCreated();
             //dbContext.Database.Migrate();
+            if (cache != null)
+            {
+                return;
+            }
+
+            var survey = CreateSurvey();
+            var userSurvey = new UserSurvey()
+            {
+                User = new User() { Name = "Demo" },
+                Survey = survey,
+                Answers = new List<UserQuestionAnswer>()
+            };
+
+            cache = userSurvey;
+
             var surveys = dbContext.Set<UserSurvey>();
             if (!surveys.Any())
-            {
-                var survey = CreateSurvey();
-                var userSurvey = new UserSurvey()
-                {
-                    User = new User() { Name = "Demo"},
-                    Survey = survey,
-                };
-                surveys.Add(userSurvey);
+            {   surveys.Add(userSurvey);
                 dbContext.SaveChanges();
             }
         }
@@ -198,18 +210,49 @@ namespace Demo.Survey.Api.Controllers
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody] UserSurvey value)
+        public void Post([FromBody] UserSurvey userSurvey)
         {
-            dbContext.Set<UserSurvey>().Attach(value);
-            dbContext.SaveChanges();
-        }
+            //userSurvey.Answers.ForEach(a =>
+            //{
+            //    x.Question = dbContext.Set<SurveyQuestion>().Find(a.Question.Id)
+            //                    .Include(x => x.Answers)
+            //                    .ThenInclude(x => x.Questions);
+            //});
+            //userSurvey.Survey = dbContext.Set<Survey>().Find(userSurvey.Survey.Id);
+            //userSurvey.User = dbContext.Set<User>().Find(userSurvey.User.Id);
+            //dbContext.Set<UserSurvey>().Attach(userSurvey);
+            //userSurvey.Answers.ForEach(x =>
+            //{
+            //    dbContext.Set<UserQuestionAnswer>()
+            //    .Include(x => x.Answers)
+            //    .ThenInclude(x => x.Questions)
+                
+            //});
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
+            //var us = dbContext.UserSurveys.Find(userSurvey.Id);
+            //userSurvey.Answers.ForEach(x =>
+            //{
+            //    var item = dbContext.Set<UserQuestionAnswer>().FirstOrDefault(a => a.Question.Id == x.Question.Id);
+            //    if (item == null)
+            //    {
+            //        var answ = new UserQuestionAnswer()
+            //        {
+            //            Question = dbContext.Set<SurveyQuestion>().Find(x.Question.Id),
+            //            Answers = x.Answers
+            //        };
+            //        dbContext.Set<UserQuestionAnswer>().Add(answ);
+            //    }
+            //    else
+            //    {
 
+            //        item.Answers.Clear();
+            //        x.Answers.ForEach(item.Answers.Add);
+            //    }
+            //});
+            //dbContext.SaveChanges();
+            cache = userSurvey;
+        }
+        
         // DELETE api/values/5
         [HttpDelete("{id}")]
         public void Delete(int id)
